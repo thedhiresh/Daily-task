@@ -1,211 +1,98 @@
 import React, { useState } from 'react';
-import { FaTasks, FaStickyNote, FaPlus, FaUser, FaBell } from 'react-icons/fa';
+import { FaTasks, FaCalendarAlt, FaEnvelope, FaUsers } from 'react-icons/fa';
 
 function App() {
-  const [tasks, setTasks] = useState([]);
-  const [notes, setNotes] = useState([]);
-  const [taskTitle, setTaskTitle] = useState('');
-  const [taskNote, setTaskNote] = useState('');
-  const [noteTitle, setNoteTitle] = useState('');
-  const [note, setNote] = useState('');
-  const [alarm, setAlarm] = useState('');
-  const [activeTab, setActiveTab] = useState('tasks');
-  const [profileName, setProfileName] = useState('John Doe');
+  const [profileName, setProfileName] = useState('Akash Khandavilli');
+  const [location, setLocation] = useState('Vizag, India');
+  const [followers, setFollowers] = useState(221);
+  const [following, setFollowing] = useState(32);
+  const [tasksToDo, setTasksToDo] = useState(22);
+  const [upcomingTasks, setUpcomingTasks] = useState(5);
+  const [messages, setMessages] = useState(10);
+  const [profileCompletion, setProfileCompletion] = useState(70);
+
   const [profilePhoto, setProfilePhoto] = useState(null);
-  const [alarmRingtone, setAlarmRingtone] = useState('');
 
-  const handleAddTask = () => {
-    setTasks([...tasks, { title: taskTitle, note: taskNote, alarm: alarm }]);
-    setTaskTitle('');
-    setTaskNote('');
-    setAlarm('');
-  };
-
-  const handleAddNote = () => {
-    setNotes([...notes, { title: noteTitle, note: note }]);
-    setNoteTitle('');
-    setNote('');
-  };
-
+  // Handle profile photo change (optional feature)
   const handleProfilePhotoChange = (e) => {
     const file = e.target.files[0];
     setProfilePhoto(URL.createObjectURL(file));
   };
 
   return (
-    <div className="h-screen flex flex-col bg-gray-100">
-      <div className="bg-blue-600 text-white p-4 text-center">
-        <h1 className="text-3xl font-bold">Task Manager</h1>
-      </div>
-
-      {/* Profile Section */}
-      <div className="p-4 flex items-center justify-center bg-white shadow-md mb-4">
-        <div className="flex items-center">
+    <div className="h-screen flex flex-col bg-gray-100 items-center">
+      {/* Profile Header */}
+      <div className="bg-orange-500 w-full p-4 flex flex-col items-center text-white">
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleProfilePhotoChange}
+          className="hidden"
+          id="profile-pic-upload"
+        />
+        <label htmlFor="profile-pic-upload">
           <img
             src={profilePhoto || 'https://via.placeholder.com/100'}
             alt="Profile"
-            className="rounded-full w-20 h-20 object-cover mr-4"
+            className="rounded-full w-24 h-24 border-4 border-white object-cover mb-4"
           />
-          <div>
-            <input
-              type="text"
-              value={profileName}
-              onChange={(e) => setProfileName(e.target.value)}
-              className="text-lg font-bold bg-transparent border-none"
-              placeholder="Your Name"
-            />
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleProfilePhotoChange}
-              className="mt-2"
-            />
-          </div>
+        </label>
+        <h2 className="text-2xl font-bold">{profileName}</h2>
+        <p className="text-sm">{location}</p>
+        <p className="mt-2 font-medium text-white">"Live happy always"</p>
+      </div>
+
+      {/* Profile Stats */}
+      <div className="bg-white shadow-lg w-11/12 p-4 mt-4 rounded-lg grid grid-cols-2 gap-4">
+        <div className="text-center">
+          <h3 className="text-lg font-bold text-gray-700">{tasksToDo}</h3>
+          <p className="text-sm text-gray-500">Tasks To Do</p>
         </div>
-        <div className="ml-4">
-          <label htmlFor="alarm-ringtone" className="text-lg">
-            Set Alarm Ringtone:
-          </label>
-          <input
-            id="alarm-ringtone"
-            type="text"
-            value={alarmRingtone}
-            onChange={(e) => setAlarmRingtone(e.target.value)}
-            placeholder="Enter Ringtone URL"
-            className="mt-2 w-full p-2 border border-gray-300"
-          />
+        <div className="text-center">
+          <h3 className="text-lg font-bold text-gray-700">{upcomingTasks}</h3>
+          <p className="text-sm text-gray-500">Upcoming Tasks</p>
+        </div>
+        <div className="text-center">
+          <h3 className="text-lg font-bold text-gray-700">{followers}</h3>
+          <p className="text-sm text-gray-500">Followers</p>
+        </div>
+        <div className="text-center">
+          <h3 className="text-lg font-bold text-gray-700">{following}</h3>
+          <p className="text-sm text-gray-500">Following</p>
         </div>
       </div>
 
-      {/* Tabs for Tasks, Notes, Add Task, Add Note */}
-      <div className="flex-1 overflow-y-scroll p-4">
-        {activeTab === 'tasks' && (
-          <div>
-            <h2 className="text-2xl font-bold mb-4">Tasks</h2>
-            <ul>
-              {tasks.map((task, index) => (
-                <li key={index} className="bg-white shadow-md p-4 mb-4 rounded-md">
-                  <h3 className="text-lg font-bold">{task.title}</h3>
-                  <p>{task.note}</p>
-                  <p>Alarm: {task.alarm}</p>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-        {activeTab === 'notes' && (
-          <div>
-            <h2 className="text-2xl font-bold mb-4">Notes</h2>
-            <ul>
-              {notes.map((note, index) => (
-                <li key={index} className="bg-white shadow-md p-4 mb-4 rounded-md">
-                  <h3 className="text-lg font-bold">{note.title}</h3>
-                  <p>{note.note}</p>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-        {activeTab === 'add-task' && (
-          <div>
-            <h2 className="text-2xl font-bold mb-4">Add Task</h2>
-            <input
-              type="text"
-              value={taskTitle}
-              onChange={(e) => setTaskTitle(e.target.value)}
-              placeholder="Task Title"
-              className="block w-full p-2 mb-4 border border-gray-400 rounded-md"
-            />
-            <textarea
-              value={taskNote}
-              onChange={(e) => setTaskNote(e.target.value)}
-              placeholder="Task Note"
-              className="block w-full p-2 mb-4 border border-gray-400 rounded-md"
-            />
-            <input
-              type="datetime-local"
-              value={alarm}
-              onChange={(e) => setAlarm(e.target.value)}
-              placeholder="Alarm"
-              className="block w-full p-2 mb-4 border border-gray-400 rounded-md"
-            />
-            <button
-              onClick={handleAddTask}
-              className="bg-green-500 text-white p-2 rounded-md"
-            >
-              Add Task
-            </button>
-          </div>
-        )}
-        {activeTab === 'add-note' && (
-          <div>
-            <h2 className="text-2xl font-bold mb-4">Add Note</h2>
-            <input
-              type="text"
-              value={noteTitle}
-              onChange={(e) => setNoteTitle(e.target.value)}
-              placeholder="Note Title"
-              className="block w-full p-2 mb-4 border border-gray-400 rounded-md"
-            />
-            <textarea
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              placeholder="Note"
-              className="block w-full p-2 mb-4 border border-gray-400 rounded-md"
-            />
-            <button
-              onClick={handleAddNote}
-              className="bg-green-500 text-white p-2 rounded-md"
-            >
-              Add Note
-            </button>
-          </div>
-        )}
+      {/* Profile Additional Information */}
+      <div className="bg-white shadow-lg w-11/12 p-4 mt-4 rounded-lg grid grid-cols-2 gap-4">
+        <div className="flex flex-col items-center text-center">
+          <FaTasks className="text-orange-500 text-3xl mb-2" />
+          <p className="text-sm">Tasks</p>
+        </div>
+        <div className="flex flex-col items-center text-center">
+          <FaCalendarAlt className="text-orange-500 text-3xl mb-2" />
+          <p className="text-sm">Upcoming</p>
+        </div>
+        <div className="flex flex-col items-center text-center">
+          <FaEnvelope className="text-orange-500 text-3xl mb-2" />
+          <p className="text-sm">Messages ({messages})</p>
+        </div>
+        <div className="flex flex-col items-center text-center">
+          <FaUsers className="text-orange-500 text-3xl mb-2" />
+          <p className="text-sm">Followers</p>
+        </div>
       </div>
 
-      {/* Bottom Navigation */}
-      <div className="bg-gray-300 p-4 text-center fixed bottom-0 w-full shadow-lg">
-        <div className="flex justify-around">
-          <button
-            onClick={() => setActiveTab('tasks')}
-            className={`p-2 rounded-full ${
-              activeTab === 'tasks' ? 'bg-blue-600 text-white' : 'text-blue-600'
-            }`}
-          >
-            <FaTasks className="h-6 w-6" />
-          </button>
-          <button
-            onClick={() => setActiveTab('notes')}
-            className={`p-2 rounded-full ${
-              activeTab === 'notes' ? 'bg-blue-600 text-white' : 'text-blue-600'
-            }`}
-          >
-            <FaStickyNote className="h-6 w-6" />
-          </button>
-          <button
-            onClick={() => setActiveTab('add-task')}
-            className={`p-2 rounded-full ${
-              activeTab === 'add-task' ? 'bg-blue-600 text-white' : 'text-blue-600'
-            }`}
-          >
-            <FaPlus className="h-6 w-6" />
-          </button>
-          <button
-            onClick={() => setActiveTab('add-note')}
-            className={`p-2 rounded-full ${
-              activeTab === 'add-note' ? 'bg-blue-600 text-white' : 'text-blue-600'
-            }`}
-          >
-            <FaBell className="h-6 w-6" />
-          </button>
-          <button
-            onClick={() => setActiveTab('profile')}
-            className={`p-2 rounded-full ${
-              activeTab === 'profile' ? 'bg-blue-600 text-white' : 'text-blue-600'
-            }`}
-          >
-            <FaUser className="h-6 w-6" />
-          </button>
+      {/* Profile Completion */}
+      <div className="bg-white shadow-lg w-11/12 p-4 mt-4 rounded-lg">
+        <div className="flex items-center justify-between">
+          <p className="text-sm font-semibold">Profile Completion</p>
+          <p className="text-sm font-semibold">{profileCompletion}%</p>
+        </div>
+        <div className="w-full bg-gray-300 rounded-full h-2.5 mt-2">
+          <div
+            className="bg-orange-500 h-2.5 rounded-full"
+            style={{ width: `${profileCompletion}%` }}
+          ></div>
         </div>
       </div>
     </div>
